@@ -1,147 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#E23744">
-
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mom's Cloud Kitchen</title>
-    <style>
-        :root { --zomato-red: #E23744; }
-        body { font-family: 'Segoe UI', sans-serif; margin: 0; background: #f4f4f4; padding-bottom: 100px; }
-        header { background: white; padding: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000; text-align: center; }
-        .kitchen-name { color: var(--zomato-red); font-size: 20px; font-weight: bold; margin: 0; }
-        
-        .food-card { background: white; border-radius: 15px; overflow: hidden; margin: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-        .food-img { width: 100%; height: 180px; object-fit: cover; }
-        .food-details { padding: 12px; }
-        .price-row { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
-        
-        .btn-group { display: flex; align-items: center; gap: 10px; border: 1px solid var(--zomato-red); border-radius: 8px; padding: 5px; }
-        .btn-group button { background: white; color: var(--zomato-red); border: none; font-weight: bold; font-size: 18px; width: 30px; }
-
-        #cart-bar { position: fixed; bottom: 15px; left: 15px; right: 15px; background: #27ae60; color: white; padding: 15px; border-radius: 12px; display: none; justify-content: space-between; z-index: 2000; }
-
-        /* Order Modal */
-        #order-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 3000; justify-content: center; align-items: center; }
-        .modal-content { background: white; width: 85%; padding: 20px; border-radius: 15px; }
-        .modal-content input { width: 92%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; }
-        .whatsapp-btn { background: #25D366; color: white; border: none; width: 100%; padding: 15px; border-radius: 8px; font-weight: bold; font-size: 16px; display: flex; align-items: center; justify-content: center; gap: 10px; }
-    </style>
-</head>
-<body>
-
-<header>
-    <p class="kitchen-name">🏠 Mom's Cloud Kitchen</p>
-    <small>Fresh & Homemade Food</small>
-</header>
-
-<div class="food-list">
-    <div class="food-card">
-        <img src=https://i.postimg.cc/pLLGcxM1/Poha-4-copy-3-e1722868478363.jpg 
-        class="food-img">
-        <div class="food-details">
-            <div style="font-weight:bold">Special mom's poha</div>
-            <div class="price-row">
-                <span>₹50</span>
-                <div class="btn-group">
-                    <button onclick="change('special poha', 50, -1)">-</button>
-                    <span id="c-special poha">0</span>
-                    <button onclick="change('special poha', 50, 1)">+</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="food-card">
-        <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?w=500" class="food-img">
-        <div class="food-details">
-            <div style="font-weight:bold">Paneer Corn Pizza</div>
-            <div class="price-row">
-                <span>₹250</span>
-                <div class="btn-group">
-                    <button onclick="change('Pizza', 250, -1)">-</button>
-                    <span id="c-Pizza">0</span>
-                    <button onclick="change('Pizza', 250, 1)">+</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div id="cart-bar" onclick="openOrderScreen()">
-    <div><span id="total-items">0</span> Items | ₹<span id="total-amt">0</span></div>
-    <div style="font-weight: bold;">Order on WhatsApp ❯</div>
-</div>
-
-<div id="order-modal">
-    <div class="modal-content">
-        <h3 style="margin-top:0">Delivery Details</h3>
-        <input type="text" id="cust-name" placeholder="Enter Your Name">
-        <input type="text" id="cust-address" placeholder="Flat No., Area, Shajapur">
-        <button class="whatsapp-btn" onclick="sendToWhatsApp()">
-            Confirm on WhatsApp
-        </button>
-        <button style="background:none; border:none; color:gray; width:100%; margin-top:15px;" onclick="closeModal()">Go Back</button>
-    </div>
-</div>
-
-<script>
-    let totalItems = 0;
-    let totalAmt = 0;
-    let cart = {}; // Stores items like { 'Burger': 2, 'Pizza': 1 }
-
-    function change(name, price, val) {
-        if (!cart[name]) cart[name] = 0;
-        if (val === -1 && cart[name] === 0) return;
-
-        cart[name] += val;
-        totalItems += val;
-        totalAmt += (price * val);
-        
-        document.getElementById('c-' + name).innerText = cart[name];
-        document.getElementById('total-items').innerText = totalItems;
-        document.getElementById('total-amt').innerText = totalAmt;
-        
-        document.getElementById('cart-bar').style.display = totalItems > 0 ? 'flex' : 'none';
+{
+  "name": "Mom's Cloud Kitchen",
+  "short_name": "Mom's Kitchen",
+  "description": "Fresh Homemade Food from Mom's Kitchen",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#E23744",
+  "icons": [
+    {
+      "src": "https://img.icons8.com/color/192/hamburger.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://img.icons8.com/color/512/hamburger.png",
+      "sizes": "512x512",
+      "type": "image/png"
     }
-
-    function openOrderScreen() {
-        document.getElementById('order-modal').style.display = 'flex';
-    }
-
-    function closeModal() {
-        document.getElementById('order-modal').style.display = 'none';
-    }
-
-    function sendToWhatsApp() {
-        const name = document.getElementById('cust-name').value;
-        const address = document.getElementById('cust-address').value;
-        const momNumber = "918120828820"; // <--- YAHAN APNI MUMMY KA NUMBER DALO (91 ke saath)
-
-        if(name && address) {
-            let itemDetails = "";
-            for (let item in cart) {
-                if (cart[item] > 0) {
-                    itemDetails += `${item} x ${cart[item]}%0A`;
-                }
-            }
-
-            let message = `*New Order from ${name}*%0A%0A`;
-            message += `*Items:*%0A${itemDetails}%0A`;
-            message += `*Total Amount:* ₹${totalAmt}%0A%0A`;
-            message += `*Address:* ${address}%0A%0A`;
-            message += `Please confirm my order!`;
-
-            const url = `https://wa.me/${momNumber}?text=${message}`;
-            window.open(url, '_blank').focus();
-        } else {
-            alert("Please fill name and address!");
-        }
-    }
-</script>
-
-</body>
-</html>
-
+  ]
+}
