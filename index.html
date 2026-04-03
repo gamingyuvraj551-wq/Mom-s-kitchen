@@ -78,8 +78,8 @@
     <div class="modal-content">
         <h2 style="margin-top:0;">Your Order</h2>
         <div id="orderSummary" class="order-summary"></div>
-        <input type="text" id="custName" placeholder="Enter Your Name">
-        <input type="text" id="custAddress" placeholder="Flat No., Area, Shajapur">
+        <input type="text" id="custName" placeholder="Apna Naam Likhein">
+        <input type="text" id="custAddress" placeholder="Pura Address (Shajapur)">
         <button class="confirm-btn" onclick="sendAllToWhatsApp()">Confirm Order on WhatsApp</button>
         <button onclick="closeModal()" style="background:none; border:none; color:#888; margin-top:15px; cursor:pointer;">Close</button>
     </div>
@@ -88,18 +88,17 @@
 <script>
     let cart = [];
 
-    // Change quantity logic
+    // Quantity badalne ke liye
     function changeQty(id, delta) {
         let el = document.getElementById(id);
         let val = parseInt(el.innerText) + delta;
         if(val >= 1) el.innerText = val;
     }
 
-    // Add to cart logic
+    // Cart mein item daalne ke liye
     function addToCart(name, price, qtyId) {
         let qty = parseInt(document.getElementById(qtyId).innerText);
         
-        // Find if item already in cart
         let existingItem = cart.find(item => item.name === name);
         if(existingItem) {
             existingItem.qty += qty;
@@ -109,22 +108,22 @@
 
         updateCartUI();
         alert(name + " added to cart!");
-        document.getElementById(qtyId).innerText = "1"; // Reset quantity display
+        document.getElementById(qtyId).innerText = "1";
     }
 
-    // Show/Update Floating Cart Bar
+    // Green Bar dikhane ke liye
     function updateCartUI() {
         let totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
         let cartBar = document.getElementById("cartBar");
         if(totalItems > 0) {
             cartBar.style.display = "flex";
-            document.getElementById("cartCount").innerText = totalItems + " Items Added";
+            document.getElementById("cartCount").innerText = totalItems + " Items";
         } else {
             cartBar.style.display = "none";
         }
     }
 
-    // Show Cart Summary in Modal
+    // Cart summary popup
     function openOrderModal() {
         let summary = "";
         let grandTotal = 0;
@@ -141,13 +140,14 @@
 
     function closeModal() { document.getElementById("orderModal").style.display = "none"; }
 
-    // Final WhatsApp Message
+    // WhatsApp par message bhejne ke liye
     function sendAllToWhatsApp() {
         let name = document.getElementById("custName").value;
         let address = document.getElementById("custAddress").value;
-        if(!name || !address) { alert("Please enter Name and Address!"); return; }
+        if(!name || !address) { alert("Naam aur Address bharo bhai!"); return; }
 
-        let message = "*New Order from " + name + "*%0A%0A";
+        let message = "*New Multi-Item Order*%0A%0A";
+        message += "*Customer:* " + name + "%0A";
         message += "*Items Ordered:*%0A";
         let grandTotal = 0;
         
@@ -158,18 +158,15 @@
 
         message += "%0A*Total Bill: ₹" + grandTotal + "*%0A";
         message += "*Address:* " + address + "%0A%0A";
-        message += "please check the order and confirm!";
+        message += "Please confirm the order!";
 
-        // Redirect to WhatsApp
         window.location.href = "https://wa.me/918120828820?text=" + message;
     }
 
-    // Service Worker Registration for PWA/Install
+    // Service Worker Registration
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-            navigator.serviceWorker.register('./sw.js').then(reg => {
-                console.log('SW Registered!');
-            }).catch(err => console.log('SW Error', err));
+            navigator.serviceWorker.register('./sw.js');
         });
     }
 </script>
