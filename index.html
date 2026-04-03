@@ -4,25 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mom's Cloud Kitchen</title>
+    <link rel="manifest" href="manifest.json">
     <style>
         body { font-family: 'Segoe UI', sans-serif; margin: 0; background: #fdf2f2; color: #333; }
         .header { background: white; text-align: center; padding: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
         .header img { width: 65px; border-radius: 50%; border: 2px solid #E23744; margin-bottom: 5px; }
-        
         .menu-container { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 15px; }
         .menu-item { background: white; border-radius: 15px; padding: 12px; text-align: center; box-shadow: 0 4px 8px rgba(0,0,0,0.05); }
         .menu-item img { width: 100%; height: 110px; object-fit: cover; border-radius: 12px; }
         .menu-item h3 { font-size: 14px; margin: 8px 0 2px; font-weight: 600; }
         .item-price { color: #E23744; font-weight: bold; font-size: 14px; margin-bottom: 8px; }
-
-        /* Quantity Buttons */
         .qty-box { display: flex; align-items: center; justify-content: center; margin-bottom: 10px; background: #f8f8f8; border-radius: 8px; padding: 5px; }
         .qty-btn { background: #E23744; color: white; border: none; width: 25px; height: 25px; border-radius: 5px; font-weight: bold; cursor: pointer; }
         .qty-val { margin: 0 12px; font-weight: bold; font-size: 14px; }
-        
         .order-btn { background: #E23744; color: white; border: none; padding: 10px; border-radius: 8px; width: 100%; font-weight: bold; cursor: pointer; font-size: 14px; }
-
-        /* Delivery Details Popup */
         .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); }
         .modal-content { background-color: white; margin: 25% auto; padding: 25px; border-radius: 20px; width: 85%; max-width: 400px; text-align: center; box-sizing: border-box; }
         input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 10px; font-size: 15px; box-sizing: border-box; }
@@ -65,8 +60,7 @@
 
 <div id="deliveryModal" class="modal">
     <div class="modal-content">
-        <h2 style="margin-bottom: 5px;">Delivery Details</h2>
-        <p style="font-size: 13px; color: #666; margin-bottom: 15px;">Enter details to confirm order</p>
+        <h2>Delivery Details</h2>
         <input type="text" id="custName" placeholder="Enter Your Name">
         <input type="text" id="custAddress" placeholder="Flat No., Area, Shajapur">
         <button class="confirm-btn" onclick="sendToWhatsApp()">Confirm on WhatsApp</button>
@@ -75,48 +69,7 @@
 </div>
 
 <script>
-    let currentItem = "", currentPrice = 0, currentQtyId = "";
-
-    function changeQty(id, delta) {
-        let el = document.getElementById(id);
-        let val = parseInt(el.innerText) + delta;
-        if(val >= 1) el.innerText = val;
-    }
-
-    function openModal(name, price, qtyId) {
-        currentItem = name;
-        currentPrice = price;
-        currentQtyId = qtyId;
-        document.getElementById("deliveryModal").style.display = "block";
-    }
-
-    function closeModal() {
-        document.getElementById("deliveryModal").style.display = "none";
-    }
-
-    function sendToWhatsApp() {
-        let name = document.getElementById("custName").value;
-        let address = document.getElementById("custAddress").value;
-        let qty = document.getElementById(currentQtyId).innerText;
-        let total = currentPrice * qty;
-
-        if(!name || !address) {
-            alert("Please enter Name and Address!");
-            return;
-        }
-
-        // Fav format message
-        let message = "*New Order from " + name + "*%0A%0A";
-        message += "*Items:*%0A" + currentItem + " x " + qty + "%0A%0A";
-        message += "*Total Amount:* ₹" + total + "%0A%0A";
-        message += "*Address:* " + address + "%0A%0A";
-        message += "Please confirm my order!";
-
-        window.location.href = "https://wa.me/918120828820?text=" + message;
-    }
-</script>
-<script>
-    // Ye code app ko install karne mein madad karta hai
+    // Register Service Worker for Install Button
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             navigator.serviceWorker.register('./sw.js')
@@ -125,7 +78,6 @@
         });
     }
 
-    // --- Purana wala popup logic yahan se shuru hota hai ---
     let currentItem = "", currentPrice = 0, currentQtyId = "";
 
     function changeQty(id, delta) {
@@ -168,4 +120,3 @@
 
 </body>
 </html>
-            
