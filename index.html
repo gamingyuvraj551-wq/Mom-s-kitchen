@@ -115,6 +115,56 @@
         window.location.href = "https://wa.me/918120828820?text=" + message;
     }
 </script>
+<script>
+    // Ye code app ko install karne mein madad karta hai
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('./sw.js')
+            .then(reg => console.log('App ready to install!'))
+            .catch(err => console.log('Error: ', err));
+        });
+    }
+
+    // --- Purana wala popup logic yahan se shuru hota hai ---
+    let currentItem = "", currentPrice = 0, currentQtyId = "";
+
+    function changeQty(id, delta) {
+        let el = document.getElementById(id);
+        let val = parseInt(el.innerText) + delta;
+        if(val >= 1) el.innerText = val;
+    }
+
+    function openModal(name, price, qtyId) {
+        currentItem = name;
+        currentPrice = price;
+        currentQtyId = qtyId;
+        document.getElementById("deliveryModal").style.display = "block";
+    }
+
+    function closeModal() {
+        document.getElementById("deliveryModal").style.display = "none";
+    }
+
+    function sendToWhatsApp() {
+        let name = document.getElementById("custName").value;
+        let address = document.getElementById("custAddress").value;
+        let qty = document.getElementById(currentQtyId).innerText;
+        let total = currentPrice * qty;
+
+        if(!name || !address) {
+            alert("Please enter Name and Address!");
+            return;
+        }
+
+        let message = "*New Order from " + name + "*%0A%0A";
+        message += "*Items:*%0A" + currentItem + " x " + qty + "%0A%0A";
+        message += "*Total Amount:* ₹" + total + "%0A%0A";
+        message += "*Address:* " + address + "%0A%0A";
+        message += "Please confirm my order!";
+
+        window.location.href = "https://wa.me/918120828820?text=" + message;
+    }
+</script>
 
 </body>
 </html>
