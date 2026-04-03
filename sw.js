@@ -1,4 +1,4 @@
-const CACHE_NAME = 'moms-kitchen-v5'; // Ise v5 kar diya hai taaki refresh ho jaye
+const CACHE_NAME = 'moms-kitchen-v10'; // Ise v10 kar diya hai taaki refresh ho jaye
 const urlsToCache = [
   './',
   './index.html',
