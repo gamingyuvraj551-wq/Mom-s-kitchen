@@ -4,35 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mom's Cloud Kitchen</title>
-    <link rel="manifest" href="manifest.json">
     <style>
         body { font-family: 'Segoe UI', sans-serif; margin: 0; background: #fdf2f2; color: #333; }
-        .header { background: white; text-align: center; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .header img { width: 70px; border-radius: 50%; border: 2px solid #E23744; }
-        
-        .menu-container { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 15px; }
-        .menu-item { background: white; border-radius: 20px; padding: 12px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
-        .menu-item img { width: 100%; height: 120px; object-fit: cover; border-radius: 15px; }
-        .item-price { color: #E23744; font-weight: bold; font-size: 16px; margin: 5px 0; }
-
-        .qty-box { display: flex; align-items: center; justify-content: center; margin-bottom: 10px; background: #f8f8f8; border-radius: 10px; padding: 5px; }
-        .qty-btn { background: #E23744; color: white; border: none; width: 30px; height: 30px; border-radius: 8px; cursor: pointer; font-weight: bold; }
-        .qty-val { margin: 0 15px; font-weight: bold; }
-        
-        .order-btn { background: #E23744; color: white; border: none; padding: 12px; border-radius: 12px; width: 100%; font-weight: bold; cursor: pointer; font-size: 15px; }
-
-        .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); }
-        .modal-content { background: white; margin: 25% auto; padding: 25px; border-radius: 25px; width: 80%; max-width: 350px; text-align: center; }
-        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 12px; box-sizing: border-box; font-size: 14px; }
-        .confirm-btn { background: #25D366; color: white; border: none; padding: 15px; border-radius: 12px; width: 100%; font-weight: bold; font-size: 16px; }
+        .header { background: white; text-align: center; padding: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .header img { width: 60px; border-radius: 50%; border: 2px solid #E23744; }
+        .menu-container { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 15px; }
+        .menu-item { background: white; border-radius: 15px; padding: 10px; text-align: center; box-shadow: 0 4px 8px rgba(0,0,0,0.05); }
+        .menu-item img { width: 100%; height: 100px; object-fit: cover; border-radius: 10px; }
+        .item-price { color: #E23744; font-weight: bold; font-size: 14px; margin-bottom: 8px; }
+        .qty-box { display: flex; align-items: center; justify-content: center; margin-bottom: 8px; background: #f8f8f8; border-radius: 8px; }
+        .qty-btn { background: #E23744; color: white; border: none; width: 25px; height: 25px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        .qty-val { margin: 0 10px; font-weight: bold; }
+        .order-btn { background: #E23744; color: white; border: none; padding: 8px; border-radius: 8px; width: 100%; font-weight: bold; cursor: pointer; }
+        .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); }
+        .modal-content { background: white; margin: 20% auto; padding: 20px; border-radius: 20px; width: 80%; text-align: center; max-width: 350px; }
+        input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box; }
+        .confirm-btn { background: #25D366; color: white; border: none; padding: 12px; border-radius: 10px; width: 100%; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
 
 <div class="header">
     <img src="https://i.postimg.cc/QtDDDSTM/1775057769108.png" alt="Logo">
-    <h1 style="font-size: 20px; margin: 5px 0;">Mom's Cloud Kitchen</h1>
-    <p style="margin:0; font-size: 12px; color: #777;">Fresh & Homemade Food</p>
+    <h1 style="font-size: 18px; margin: 5px 0;">Mom's Cloud Kitchen</h1>
 </div>
 
 <div class="menu-container">
@@ -63,50 +57,37 @@
 
 <div id="orderModal" class="modal">
     <div class="modal-content">
-        <h3 id="modalTitle" style="margin-top:0;">Confirm Order</h3>
-        <input type="text" id="custName" placeholder="Apna Naam">
-        <input type="text" id="custAddress" placeholder="Pura Address (Shajapur)">
-        <button class="confirm-btn" onclick="sendToWhatsApp()">WhatsApp Par Bheinjein</button>
-        <button onclick="closeModal()" style="background:none; border:none; color:#999; margin-top:15px; cursor:pointer;">Cancel</button>
+        <h3 id="modalTitle">Order Details</h3>
+        <input type="text" id="custName" placeholder="Your Name">
+        <input type="text" id="custAddress" placeholder="Address in Shajapur">
+        <button class="confirm-btn" onclick="sendToWhatsApp()">Confirm Order</button>
+        <button onclick="closeModal()" style="background:none; border:none; color:red; margin-top:10px; cursor:pointer;">Cancel</button>
     </div>
 </div>
 
 <script>
     let currentItem = ""; let currentPrice = 0; let currentQtyId = "";
-
     function changeQty(id, delta) {
         let el = document.getElementById(id);
         let val = parseInt(el.innerText) + delta;
         if(val >= 1) el.innerText = val;
     }
-
     function openModal(name, price, qtyId) {
         currentItem = name; currentPrice = price; currentQtyId = qtyId;
-        document.getElementById('modalTitle').innerText = name + " Order Karein";
+        document.getElementById('modalTitle').innerText = "Order " + name;
         document.getElementById('orderModal').style.display = "block";
     }
-
     function closeModal() { document.getElementById('orderModal').style.display = "none"; }
-
     function sendToWhatsApp() {
         let name = document.getElementById('custName').value;
         let address = document.getElementById('custAddress').value;
         let qty = document.getElementById(currentQtyId).innerText;
-        
-        if(!name || !address) { alert("Naam aur Address bhariye!"); return; }
-
+        if(!name || !address) { alert("Details bharo!"); return; }
         let total = currentPrice * parseInt(qty);
-        let message = "*Mom's Cloud Kitchen Order*%0A%0A" +
-                      "*Item:* " + currentItem + "%0A" +
-                      "*Quantity:* " + qty + "%0A" +
-                      "*Total:* ₹" + total + "%0A" +
-                      "*Customer:* " + name + "%0A" +
-                      "*Address:* " + address + "%0A%0A" +
-                      "Please confirm my order!";
-
+        let message = "*New Order*%0A*Item:* " + currentItem + "%0A*Qty:* " + qty + "%0A*Total:* ₹" + total + "%0A*Customer:* " + name + "%0A*Address:* " + address;
+        // Tumhara number yahan set hai
         window.location.href = "https://wa.me/918120828820?text=" + message;
     }
 </script>
-
 </body>
 </html>
