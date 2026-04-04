@@ -3,91 +3,122 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mom's Cloud Kitchen</title>
+    <title>Express Eats - Mom's Kitchen</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { font-family: 'Segoe UI', sans-serif; margin: 0; background: #fdf2f2; color: #333; }
-        .header { background: white; text-align: center; padding: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .header img { width: 60px; border-radius: 50%; border: 2px solid #E23744; }
-        .menu-container { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 15px; }
-        .menu-item { background: white; border-radius: 15px; padding: 10px; text-align: center; box-shadow: 0 4px 8px rgba(0,0,0,0.05); }
-        .menu-item img { width: 100%; height: 100px; object-fit: cover; border-radius: 10px; }
-        .item-price { color: #E23744; font-weight: bold; font-size: 14px; margin-bottom: 8px; }
-        .qty-box { display: flex; align-items: center; justify-content: center; margin-bottom: 8px; background: #f8f8f8; border-radius: 8px; }
-        .qty-btn { background: #E23744; color: white; border: none; width: 25px; height: 25px; border-radius: 5px; cursor: pointer; font-weight: bold; }
-        .qty-val { margin: 0 10px; font-weight: bold; }
-        .order-btn { background: #E23744; color: white; border: none; padding: 8px; border-radius: 8px; width: 100%; font-weight: bold; cursor: pointer; }
-        .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); }
-        .modal-content { background: white; margin: 20% auto; padding: 20px; border-radius: 20px; width: 80%; text-align: center; max-width: 350px; }
-        input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box; }
-        .confirm-btn { background: #25D366; color: white; border: none; padding: 12px; border-radius: 10px; width: 100%; font-weight: bold; cursor: pointer; }
+        :root { --primary: #00b464; --bg: #f8fbf9; --text: #333; }
+        body { font-family: 'Poppins', sans-serif; margin: 0; background: var(--bg); color: var(--text); padding-bottom: 80px; }
+        
+        /* Top Header */
+        .top-nav { display: flex; justify-content: space-between; align-items: center; padding: 20px; background: white; }
+        .location { font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 5px; }
+        .location span { color: var(--primary); }
+        
+        /* Search Bar */
+        .search-container { padding: 0 20px; margin-top: 10px; display: flex; gap: 10px; }
+        .search-box { background: white; flex: 1; display: flex; align-items: center; padding: 12px 15px; border-radius: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .search-box input { border: none; outline: none; margin-left: 10px; width: 100%; font-size: 14px; }
+        .filter-btn { background: white; padding: 12px; border-radius: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); color: #333; }
+
+        /* Categories */
+        .section-title { padding: 20px; font-weight: bold; font-size: 18px; display: flex; justify-content: space-between; }
+        .categories { display: flex; gap: 20px; padding: 0 20px; overflow-x: auto; scrollbar-width: none; }
+        .cat-item { text-align: center; min-width: 70px; }
+        .cat-icon { background: white; width: 60px; height: 60px; border-radius: 15px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 8px; font-size: 24px; }
+        .cat-item p { font-size: 12px; margin: 0; font-weight: 500; }
+
+        /* Popular Items */
+        .food-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 20px; }
+        .food-card { background: white; border-radius: 20px; padding: 12px; position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.04); }
+        .food-card img { width: 100%; height: 110px; object-fit: cover; border-radius: 15px; }
+        .heart-btn { position: absolute; top: 20px; right: 20px; color: #ff4d4d; background: white; width: 25px; height: 25px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .food-card h3 { font-size: 14px; margin: 10px 0 2px; }
+        .food-card p { font-size: 12px; color: #888; margin: 0; }
+        .price-row { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
+        .price { font-weight: bold; color: var(--text); }
+        .add-btn { background: var(--primary); color: white; border: none; width: 28px; height: 28px; border-radius: 8px; cursor: pointer; }
+
+        /* Bottom Nav */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 15px 0; border-radius: 25px 25px 0 0; box-shadow: 0 -5px 20px rgba(0,0,0,0.05); }
+        .nav-item { font-size: 20px; color: #ccc; cursor: pointer; }
+        .nav-item.active { color: var(--primary); }
+
+        /* Order Button for WhatsApp */
+        .whatsapp-order { position: fixed; bottom: 85px; right: 20px; background: #25D366; color: white; padding: 12px 20px; border-radius: 30px; font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.2); display: flex; align-items: center; gap: 8px; text-decoration: none; font-size: 14px; }
     </style>
 </head>
 <body>
 
-<div class="header">
-    <img src="https://i.postimg.cc/QtDDDSTM/1775057769108.png" alt="Logo">
-    <h1 style="font-size: 18px; margin: 5px 0;">Mom's Cloud Kitchen</h1>
-</div>
+    <div class="top-nav">
+        <div class="nav-item active"><i class="fa-solid fa-bars-staggered"></i></div>
+        <div class="location"><i class="fa-solid fa-location-dot"></i> Express <span>Eats</span></div>
+        <div class="nav-item"><i class="fa-regular fa-bell"></i></div>
+    </div>
 
-<div class="menu-container">
-    <div class="menu-item">
-        <img src="https://i.postimg.cc/WzQXRYDc/Poha-4-copy-3-e1722868478363-(1).jpg">
-        <h3>Indori Poha</h3>
-        <div class="item-price">₹50</div>
-        <div class="qty-box">
-            <button class="qty-btn" onclick="changeQty('pohaQty', -1)">-</button>
-            <span id="pohaQty" class="qty-val">1</span>
-            <button class="qty-btn" onclick="changeQty('pohaQty', 1)">+</button>
+    <div class="search-container">
+        <div class="search-box">
+            <i class="fa-solid fa-magnifying-glass" style="color: #ccc;"></i>
+            <input type="text" placeholder="Search for food">
         </div>
-        <button class="order-btn" onclick="openModal('Indori Poha', 50, 'pohaQty')">Order</button>
+        <div class="filter-btn"><i class="fa-solid fa-sliders"></i></div>
     </div>
 
-    <div class="menu-item">
-        <img src="https://i.postimg.cc/yYZLhK5k/o-Alx-DEPy.webp">
-        <h3>Paneer Pizza</h3>
-        <div class="item-price">₹250</div>
-        <div class="qty-box">
-            <button class="qty-btn" onclick="changeQty('pizzaQty', -1)">-</button>
-            <span id="pizzaQty" class="qty-val">1</span>
-            <button class="qty-btn" onclick="changeQty('pizzaQty', 1)">+</button>
+    <div class="section-title">Categories</div>
+    <div class="categories">
+        <div class="cat-item">
+            <div class="cat-icon">🍰</div>
+            <p>Dessert</p>
         </div>
-        <button class="order-btn" onclick="openModal('Paneer Pizza', 250, 'pizzaQty')">Order</button>
+        <div class="cat-item">
+            <div class="cat-icon" style="background: var(--primary); color: white;">🍕</div>
+            <p>Pizza</p>
+        </div>
+        <div class="cat-item">
+            <div class="cat-icon">🍱</div>
+            <p>Lunch</p>
+        </div>
+        <div class="cat-item">
+            <div class="cat-icon">🥤</div>
+            <p>Drinks</p>
+        </div>
     </div>
-</div>
 
-<div id="orderModal" class="modal">
-    <div class="modal-content">
-        <h3 id="modalTitle">Order Details</h3>
-        <input type="text" id="custName" placeholder="Your Name">
-        <input type="text" id="custAddress" placeholder="Address in Shajapur">
-        <button class="confirm-btn" onclick="sendToWhatsApp()">Confirm Order</button>
-        <button onclick="closeModal()" style="background:none; border:none; color:red; margin-top:10px; cursor:pointer;">Cancel</button>
+    <div class="section-title">Popular <span style="color: var(--primary); font-size: 13px;">See all</span></div>
+    
+    <div class="food-grid">
+        <div class="food-card">
+            <div class="heart-btn"><i class="fa-regular fa-heart"></i></div>
+            <img src="https://i.postimg.cc/WzQXRYDc/Poha-4-copy-3-e1722868478363-(1).jpg" alt="Poha">
+            <h3>Indori Poha</h3>
+            <p>Moms Kitchen</p>
+            <div class="price-row">
+                <span class="price">Rs. 50</span>
+                <button class="add-btn">+</button>
+            </div>
+        </div>
+
+        <div class="food-card">
+            <div class="heart-btn"><i class="fa-regular fa-heart"></i></div>
+            <img src="https://i.postimg.cc/yYZLhK5k/o-Alx-DEPy.webp" alt="Pizza">
+            <h3>Paneer Pizza</h3>
+            <p>The Varq, Shajapur</p>
+            <div class="price-row">
+                <span class="price">Rs. 250</span>
+                <button class="add-btn">+</button>
+            </div>
+        </div>
     </div>
-</div>
 
-<script>
-    let currentItem = ""; let currentPrice = 0; let currentQtyId = "";
-    function changeQty(id, delta) {
-        let el = document.getElementById(id);
-        let val = parseInt(el.innerText) + delta;
-        if(val >= 1) el.innerText = val;
-    }
-    function openModal(name, price, qtyId) {
-        currentItem = name; currentPrice = price; currentQtyId = qtyId;
-        document.getElementById('modalTitle').innerText = "Order " + name;
-        document.getElementById('orderModal').style.display = "block";
-    }
-    function closeModal() { document.getElementById('orderModal').style.display = "none"; }
-    function sendToWhatsApp() {
-        let name = document.getElementById('custName').value;
-        let address = document.getElementById('custAddress').value;
-        let qty = document.getElementById(currentQtyId).innerText;
-        if(!name || !address) { alert("Details bharo!"); return; }
-        let total = currentPrice * parseInt(qty);
-        let message = "*New Order*%0A*Item:* " + currentItem + "%0A*Qty:* " + qty + "%0A*Total:* ₹" + total + "%0A*Customer:* " + name + "%0A*Address:* " + address;
-        // Tumhara number yahan set hai
-        window.location.href = "https://wa.me/918120828820?text=" + message;
-    }
-</script>
+    <a href="https://wa.me/918120828820?text=Hello Mom's Kitchen, I want to order food!" class="whatsapp-order">
+        <i class="fa-brands fa-whatsapp"></i> Order Now
+    </a>
+
+    <div class="bottom-nav">
+        <div class="nav-item active"><i class="fa-solid fa-house"></i></div>
+        <div class="nav-item"><i class="fa-regular fa-heart"></i></div>
+        <div class="nav-item"><i class="fa-regular fa-circle-user"></i></div>
+        <div class="nav-item"><i class="fa-solid fa-cart-shopping"></i></div>
+    </div>
+
 </body>
 </html>
