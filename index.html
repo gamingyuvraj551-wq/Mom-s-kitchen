@@ -3,122 +3,131 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Express Eats - Mom's Kitchen</title>
+    <title>Mom's Cloud Kitchen - Shajapur</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --primary: #00b464; --bg: #f8fbf9; --text: #333; }
-        body { font-family: 'Poppins', sans-serif; margin: 0; background: var(--bg); color: var(--text); padding-bottom: 80px; }
+        :root { --primary: #E23744; --bg: #fdf2f2; --text: #333; }
+        body { font-family: 'Poppins', sans-serif; margin: 0; background: var(--bg); color: var(--text); padding-bottom: 100px; }
         
-        /* Top Header */
-        .top-nav { display: flex; justify-content: space-between; align-items: center; padding: 20px; background: white; }
-        .location { font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 5px; }
-        .location span { color: var(--primary); }
-        
-        /* Search Bar */
-        .search-container { padding: 0 20px; margin-top: 10px; display: flex; gap: 10px; }
-        .search-box { background: white; flex: 1; display: flex; align-items: center; padding: 12px 15px; border-radius: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        /* Top Navigation */
+        .top-nav { display: flex; justify-content: space-between; align-items: center; padding: 20px; background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .logo-area { display: flex; align-items: center; gap: 10px; }
+        .logo-area img { width: 40px; border-radius: 50%; }
+        .brand-name { font-weight: bold; font-size: 18px; color: var(--text); }
+
+        /* Search & Categories */
+        .search-container { padding: 15px 20px; }
+        .search-box { background: white; display: flex; align-items: center; padding: 12px 15px; border-radius: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
         .search-box input { border: none; outline: none; margin-left: 10px; width: 100%; font-size: 14px; }
-        .filter-btn { background: white; padding: 12px; border-radius: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); color: #333; }
 
-        /* Categories */
-        .section-title { padding: 20px; font-weight: bold; font-size: 18px; display: flex; justify-content: space-between; }
-        .categories { display: flex; gap: 20px; padding: 0 20px; overflow-x: auto; scrollbar-width: none; }
-        .cat-item { text-align: center; min-width: 70px; }
-        .cat-icon { background: white; width: 60px; height: 60px; border-radius: 15px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 8px; font-size: 24px; }
-        .cat-item p { font-size: 12px; margin: 0; font-weight: 500; }
-
-        /* Popular Items */
+        .section-title { padding: 15px 20px; font-weight: bold; font-size: 18px; }
+        
+        /* Food Grid */
         .food-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 20px; }
-        .food-card { background: white; border-radius: 20px; padding: 12px; position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.04); }
-        .food-card img { width: 100%; height: 110px; object-fit: cover; border-radius: 15px; }
-        .heart-btn { position: absolute; top: 20px; right: 20px; color: #ff4d4d; background: white; width: 25px; height: 25px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .food-card h3 { font-size: 14px; margin: 10px 0 2px; }
-        .food-card p { font-size: 12px; color: #888; margin: 0; }
-        .price-row { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
-        .price { font-weight: bold; color: var(--text); }
-        .add-btn { background: var(--primary); color: white; border: none; width: 28px; height: 28px; border-radius: 8px; cursor: pointer; }
+        .food-card { background: white; border-radius: 25px; padding: 10px; box-shadow: 0 8px 20px rgba(0,0,0,0.06); text-align: center; position: relative; }
+        .food-card img { width: 100%; height: 110px; object-fit: cover; border-radius: 20px; }
+        .food-card h3 { font-size: 14px; margin: 10px 0 5px; }
+        .price { color: var(--primary); font-weight: bold; display: block; margin-bottom: 10px; }
 
-        /* Bottom Nav */
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 15px 0; border-radius: 25px 25px 0 0; box-shadow: 0 -5px 20px rgba(0,0,0,0.05); }
-        .nav-item { font-size: 20px; color: #ccc; cursor: pointer; }
-        .nav-item.active { color: var(--primary); }
+        /* Cart Controls */
+        .qty-controls { display: flex; align-items: center; justify-content: center; gap: 12px; background: #f8f8f8; border-radius: 12px; padding: 5px; }
+        .btn-qty { background: var(--primary); color: white; border: none; width: 32px; height: 32px; border-radius: 10px; cursor: pointer; font-size: 18px; font-weight: bold; }
+        .count { font-weight: bold; font-size: 16px; min-width: 20px; }
 
-        /* Order Button for WhatsApp */
-        .whatsapp-order { position: fixed; bottom: 85px; right: 20px; background: #25D366; color: white; padding: 12px 20px; border-radius: 30px; font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.2); display: flex; align-items: center; gap: 8px; text-decoration: none; font-size: 14px; }
+        /* Floating Order Bar */
+        .cart-bar { position: fixed; bottom: 25px; left: 5%; width: 90%; background: #25D366; color: white; padding: 18px; border-radius: 20px; display: none; justify-content: space-between; align-items: center; box-shadow: 0 10px 25px rgba(37, 211, 102, 0.3); z-index: 1000; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
 
     <div class="top-nav">
-        <div class="nav-item active"><i class="fa-solid fa-bars-staggered"></i></div>
-        <div class="location"><i class="fa-solid fa-location-dot"></i> Express <span>Eats</span></div>
-        <div class="nav-item"><i class="fa-regular fa-bell"></i></div>
+        <div class="logo-area">
+            <img src="https://i.postimg.cc/QtDDDSTM/1775057769108.png" alt="Logo">
+            <div class="brand-name">Mom's Cloud Kitchen</div>
+        </div>
+        <i class="fa-regular fa-circle-user" style="font-size: 20px; color: #888;"></i>
     </div>
 
     <div class="search-container">
         <div class="search-box">
             <i class="fa-solid fa-magnifying-glass" style="color: #ccc;"></i>
-            <input type="text" placeholder="Search for food">
-        </div>
-        <div class="filter-btn"><i class="fa-solid fa-sliders"></i></div>
-    </div>
-
-    <div class="section-title">Categories</div>
-    <div class="categories">
-        <div class="cat-item">
-            <div class="cat-icon">🍰</div>
-            <p>Dessert</p>
-        </div>
-        <div class="cat-item">
-            <div class="cat-icon" style="background: var(--primary); color: white;">🍕</div>
-            <p>Pizza</p>
-        </div>
-        <div class="cat-item">
-            <div class="cat-icon">🍱</div>
-            <p>Lunch</p>
-        </div>
-        <div class="cat-item">
-            <div class="cat-icon">🥤</div>
-            <p>Drinks</p>
+            <input type="text" placeholder="Shajapur ka swad search karein...">
         </div>
     </div>
 
-    <div class="section-title">Popular <span style="color: var(--primary); font-size: 13px;">See all</span></div>
+    <div class="section-title">Hamara Menu</div>
     
     <div class="food-grid">
         <div class="food-card">
-            <div class="heart-btn"><i class="fa-regular fa-heart"></i></div>
             <img src="https://i.postimg.cc/WzQXRYDc/Poha-4-copy-3-e1722868478363-(1).jpg" alt="Poha">
             <h3>Indori Poha</h3>
-            <p>Moms Kitchen</p>
-            <div class="price-row">
-                <span class="price">Rs. 50</span>
-                <button class="add-btn">+</button>
+            <span class="price">₹50</span>
+            <div class="qty-controls">
+                <button class="btn-qty" onclick="updateCart('Indori Poha', 50, -1)">-</button>
+                <span id="qty-Indori Poha" class="count">0</span>
+                <button class="btn-qty" onclick="updateCart('Indori Poha', 50, 1)">+</button>
             </div>
         </div>
 
         <div class="food-card">
-            <div class="heart-btn"><i class="fa-regular fa-heart"></i></div>
             <img src="https://i.postimg.cc/yYZLhK5k/o-Alx-DEPy.webp" alt="Pizza">
             <h3>Paneer Pizza</h3>
-            <p>The Varq, Shajapur</p>
-            <div class="price-row">
-                <span class="price">Rs. 250</span>
-                <button class="add-btn">+</button>
+            <span class="price">₹250</span>
+            <div class="qty-controls">
+                <button class="btn-qty" onclick="updateCart('Paneer Pizza', 250, -1)">-</button>
+                <span id="qty-Paneer Pizza" class="count">0</span>
+                <button class="btn-qty" onclick="updateCart('Paneer Pizza', 250, 1)">+</button>
             </div>
         </div>
     </div>
 
-    <a href="https://wa.me/918120828820?text=Hello Mom's Kitchen, I want to order food!" class="whatsapp-order">
-        <i class="fa-brands fa-whatsapp"></i> Order Now
-    </a>
-
-    <div class="bottom-nav">
-        <div class="nav-item active"><i class="fa-solid fa-house"></i></div>
-        <div class="nav-item"><i class="fa-regular fa-heart"></i></div>
-        <div class="nav-item"><i class="fa-regular fa-circle-user"></i></div>
-        <div class="nav-item"><i class="fa-solid fa-cart-shopping"></i></div>
+    <div id="cartBar" class="cart-bar" onclick="sendToWhatsApp()">
+        <span><i class="fa-brands fa-whatsapp"></i> <span id="cartCount">0</span> Items Selected</span>
+        <span>Order Bheinjein <i class="fa-solid fa-arrow-right"></i></span>
     </div>
 
+    <script>
+        let cart = {};
+
+        function updateCart(name, price, change) {
+            if (!cart[name]) cart[name] = { qty: 0, price: price };
+            cart[name].qty += change;
+            if (cart[name].qty < 0) cart[name].qty = 0;
+            document.getElementById('qty-' + name).innerText = cart[name].qty;
+            renderCartBar();
+        }
+
+        function renderCartBar() {
+            let totalItems = 0;
+            for (let item in cart) { totalItems += cart[item].qty; }
+            let bar = document.getElementById('cartBar');
+            if (totalItems > 0) {
+                bar.style.display = 'flex';
+                document.getElementById('cartCount').innerText = totalItems;
+            } else {
+                bar.style.display = 'none';
+            }
+        }
+
+        function sendToWhatsApp() {
+            let message = "*MOM'S CLOUD KITCHEN ORDER*%0A--------------------------%0A";
+            let grandTotal = 0;
+            let hasItems = false;
+
+            for (let item in cart) {
+                if (cart[item].qty > 0) {
+                    let total = cart[item].qty * cart[item].price;
+                    message += "👉 *" + item + "* (" + cart[item].qty + ") = ₹" + total + "%0A";
+                    grandTotal += total;
+                    hasItems = true;
+                }
+            }
+
+            if (!hasItems) return;
+
+            message += "--------------------------%0A*Total Bill: ₹" + grandTotal + "*%0A%0A_Shajapur Delivery_";
+            window.location.href = "https://wa.me/918120828820?text=" + message;
+        }
+    </script>
 </body>
 </html>
